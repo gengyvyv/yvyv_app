@@ -1,0 +1,10 @@
+{
+  "latest_version_code": 10,
+  "latest_version_name": "1.0",
+  "update_url": "https://abc/app.apk", 
+  "config_urls": [
+    "",
+  ],
+  "update_log": "The first edition was released. 第一版发布。 最初のバージョンがリリースされました",
+  "force_update": false,
+}
