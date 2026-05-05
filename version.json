@@ -6,5 +6,5 @@
     "https://raw.githubusercontent.com/gengyvyv/yvyv_app/refs/heads/main/version.json",
   ],
   "update_log": "The first edition was released. 第一版发布。 最初のバージョンがリリースされました",
-  "force_update": false,
+  "force_update": false
 }
