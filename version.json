@@ -3,7 +3,7 @@
   "latest_version_name": "1.0.1",
   "update_url": "https://abc/app.apk", 
   "config_urls": [
-    "https://raw.githubusercontent.com/gengyvyv/yvyv_app/main/version.json",
+    "https://raw.githubusercontent.com/gengyvyv/yvyv_app/main/version.json"
   ],
   "update_log": "The first edition was released. 第一版发布。 最初のバージョンがリリースされました",
   "force_update": false
