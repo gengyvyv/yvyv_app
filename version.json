@@ -6,9 +6,5 @@
     "https://raw.githubusercontent.com/gengyvyv/yvyv_app/main/version.json",
   ],
   "update_log": "The first edition was released. 第一版发布。 最初のバージョンがリリースされました",
-  "force_update": false,
-  "checksum": {
-    "sha256": "8743b52063cd84097a65d1633f5c74f5"
-  }
-
+  "force_update": false
 }
