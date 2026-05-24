@@ -10,5 +10,6 @@
     "en": "The first edition was released.",
     "ja": "最初のバージョンがリリースされました。"
   },
-  "force_update": false
+  "force_update": false,
+  "analytics_server_url": "https://gengyvyv-yv-dev.hf.space"
 }
