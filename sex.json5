@@ -1,0 +1,3317 @@
+[
+    {
+      "name": "杏吧资源站",
+      "baseUrl": "https://json.xingba222.com",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "list": "$.list[*]",
+              "fields": {
+                "id": "vod_id",
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "subtitle": "vod_remarks",
+                "category": "type_name"
+              }
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "item": "$.list[0]",
+              "fields": {
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "category": "type_name",
+                "year": "vod_year",
+                "area": "vod_area",
+                "director": "vod_director",
+                "actor": "vod_actor",
+                "summary": "vod_content",
+                "subtitle": "vod_remarks"
+              }
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "json",
+              "engine": "embeddedPlaylist",
+              "item": "$.list[0]",
+              "lineField": "vod_play_from",
+              "itemsField": "vod_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              }
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "黄色仓库",
+      "baseUrl": "https://hsckzy001.com",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/at/xml",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "xmlMode": "toObject",
+              "format": "xml",
+              "engine": "jsonpath",
+              "list": "$.list.video[*]",
+              "fields": {
+                "id": "id",
+                "title": "name",
+                "cover": "pic",
+                "subtitle": "note",
+                "category": "type"
+              }
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/at/xml",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "xmlMode": "toObject",
+              "format": "xml",
+              "engine": "jsonpath",
+              "item": "$.list.video[0]||$.list.video",
+              "fields": {
+                "title": "name",
+                "cover": "pic",
+                "category": "type",
+                "year": "year",
+                "area": "area",
+                "director": "director",
+                "actor": "actor",
+                "summary": "des",
+                "subtitle": "note"
+              }
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "xmlMode": "toObject",
+              "format": "xml",
+              "engine": "embeddedPlaylist",
+              "lineField": "_play_from",
+              "itemsField": "_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              }
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "杏吧资源站",
+      "baseUrl": "https://json.xingba222.com",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "list": "$.list[*]",
+              "fields": {
+                "id": "vod_id",
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "subtitle": "vod_remarks",
+                "category": "type_name"
+              }
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "item": "$.list[0]",
+              "fields": {
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "category": "type_name",
+                "year": "vod_year",
+                "area": "vod_area",
+                "director": "vod_director",
+                "actor": "vod_actor",
+                "summary": "vod_content",
+                "subtitle": "vod_remarks"
+              }
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "json",
+              "engine": "embeddedPlaylist",
+              "lineField": "vod_play_from",
+              "itemsField": "vod_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              }
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "黄色仓库",
+      "baseUrl": "https://hsckzy888.com",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/from/hsckm3u8/at/xml/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "xml",
+              "engine": "jsonpath",
+              "list": "$.list.video[*]",
+              "fields": {
+                "id": "id",
+                "title": "name",
+                "cover": "pic",
+                "subtitle": "note",
+                "category": "type"
+              },
+              "xmlMode": "toObject"
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/from/hsckm3u8/at/xml/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "xml",
+              "engine": "jsonpath",
+              "item": "$.list.video[0]||$.list.video",
+              "fields": {
+                "title": "name",
+                "cover": "pic",
+                "category": "type",
+                "year": "year",
+                "area": "area",
+                "director": "director",
+                "actor": "actor",
+                "summary": "des",
+                "subtitle": "note"
+              },
+              "xmlMode": "toObject"
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "xml",
+              "engine": "embeddedPlaylist",
+              "lineField": "_play_from",
+              "itemsField": "_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              },
+              "xmlMode": "toObject"
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "香蕉资源站",
+      "baseUrl": "https://xiangjiaozyw.com",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "list": "$.list[*]",
+              "fields": {
+                "id": "vod_id",
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "subtitle": "vod_remarks",
+                "category": "type_name"
+              }
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "item": "$.list[0]",
+              "fields": {
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "category": "type_name",
+                "year": "vod_year",
+                "area": "vod_area",
+                "director": "vod_director",
+                "actor": "vod_actor",
+                "summary": "vod_content",
+                "subtitle": "vod_remarks"
+              }
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "json",
+              "engine": "embeddedPlaylist",
+              "lineField": "vod_play_from",
+              "itemsField": "vod_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              }
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "番茄",
+      "baseUrl": "https://fqzy.me",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "list": "$.list[*]",
+              "fields": {
+                "id": "vod_id",
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "subtitle": "vod_remarks",
+                "category": "type_name"
+              }
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "item": "$.list[0]",
+              "fields": {
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "category": "type_name",
+                "year": "vod_year",
+                "area": "vod_area",
+                "director": "vod_director",
+                "actor": "vod_actor",
+                "summary": "vod_content",
+                "subtitle": "vod_remarks"
+              }
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "json",
+              "engine": "embeddedPlaylist",
+              "lineField": "vod_play_from",
+              "itemsField": "vod_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              }
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "小鸡资源网",
+      "baseUrl": "https://api.xjzyapi.xyz",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/provide/vod",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "list": "$.list[*]",
+              "fields": {
+                "id": "vod_id",
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "subtitle": "vod_remarks",
+                "category": "type_name"
+              }
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/provide/vod",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "item": "$.list[0]",
+              "fields": {
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "category": "type_name",
+                "year": "vod_year",
+                "area": "vod_area",
+                "director": "vod_director",
+                "actor": "vod_actor",
+                "summary": "vod_content",
+                "subtitle": "vod_remarks"
+              }
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "json",
+              "engine": "embeddedPlaylist",
+              "lineField": "vod_play_from",
+              "itemsField": "vod_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              }
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "细胞资源网",
+      "baseUrl": "https://www.xxibaozyw.com",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "list": "$.list[*]",
+              "fields": {
+                "id": "vod_id",
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "subtitle": "vod_remarks",
+                "category": "type_name"
+              }
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "item": "$.list[0]",
+              "fields": {
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "category": "type_name",
+                "year": "vod_year",
+                "area": "vod_area",
+                "director": "vod_director",
+                "actor": "vod_actor",
+                "summary": "vod_content",
+                "subtitle": "vod_remarks"
+              }
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "json",
+              "engine": "embeddedPlaylist",
+              "lineField": "vod_play_from",
+              "itemsField": "vod_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              }
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "草批",
+      "baseUrl": "https://www.saobi2.com",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/at/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "xml",
+              "engine": "jsonpath",
+              "list": "$.list.video[*]",
+              "fields": {
+                "id": "id",
+                "title": "name",
+                "cover": "pic",
+                "subtitle": "note",
+                "category": "type"
+              },
+              "xmlMode": "toObject"
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/at/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "xml",
+              "engine": "jsonpath",
+              "item": "$.list.video[0]||$.list.video",
+              "fields": {
+                "title": "name",
+                "cover": "pic",
+                "category": "type",
+                "year": "year",
+                "area": "area",
+                "director": "director",
+                "actor": "actor",
+                "summary": "des",
+                "subtitle": "note"
+              },
+              "xmlMode": "toObject"
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "xml",
+              "engine": "embeddedPlaylist",
+              "lineField": "_play_from",
+              "itemsField": "_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              },
+              "xmlMode": "toObject"
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "奶香香资源",
+      "baseUrl": "https://naixxzy.com",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/at/xml/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "xml",
+              "engine": "jsonpath",
+              "list": "$.list.video[*]",
+              "fields": {
+                "id": "id",
+                "title": "name",
+                "cover": "pic",
+                "subtitle": "note",
+                "category": "type"
+              },
+              "xmlMode": "toObject"
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/at/xml/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "xml",
+              "engine": "jsonpath",
+              "item": "$.list.video[0]||$.list.video",
+              "fields": {
+                "title": "name",
+                "cover": "pic",
+                "category": "type",
+                "year": "year",
+                "area": "area",
+                "director": "director",
+                "actor": "actor",
+                "summary": "des",
+                "subtitle": "note"
+              },
+              "xmlMode": "toObject"
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "xml",
+              "engine": "embeddedPlaylist",
+              "lineField": "_play_from",
+              "itemsField": "_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              },
+              "xmlMode": "toObject"
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "桃花视频",
+      "baseUrl": "https://thzy1.me",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/at/xml",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "xml",
+              "engine": "jsonpath",
+              "list": "$.list.video[*]",
+              "fields": {
+                "id": "id",
+                "title": "name",
+                "cover": "pic",
+                "subtitle": "note",
+                "category": "type"
+              },
+              "xmlMode": "toObject"
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/at/xml",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "xml",
+              "engine": "jsonpath",
+              "item": "$.list.video[0]||$.list.video",
+              "fields": {
+                "title": "name",
+                "cover": "pic",
+                "category": "type",
+                "year": "year",
+                "area": "area",
+                "director": "director",
+                "actor": "actor",
+                "summary": "des",
+                "subtitle": "note"
+              },
+              "xmlMode": "toObject"
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "xml",
+              "engine": "embeddedPlaylist",
+              "lineField": "_play_from",
+              "itemsField": "_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              },
+              "xmlMode": "toObject"
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "CK伦理资源",
+      "baseUrl": "https://ckzy.me",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "list": "$.list[*]",
+              "fields": {
+                "id": "vod_id",
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "subtitle": "vod_remarks",
+                "category": "type_name"
+              }
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "item": "$.list[0]",
+              "fields": {
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "category": "type_name",
+                "year": "vod_year",
+                "area": "vod_area",
+                "director": "vod_director",
+                "actor": "vod_actor",
+                "summary": "vod_content",
+                "subtitle": "vod_remarks"
+              }
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "json",
+              "engine": "embeddedPlaylist",
+              "lineField": "vod_play_from",
+              "itemsField": "vod_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              }
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "大奶子资源",
+      "baseUrl": "https://apidanaizi.com",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "list": "$.list[*]",
+              "fields": {
+                "id": "vod_id",
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "subtitle": "vod_remarks",
+                "category": "type_name"
+              }
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "item": "$.list[0]",
+              "fields": {
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "category": "type_name",
+                "year": "vod_year",
+                "area": "vod_area",
+                "director": "vod_director",
+                "actor": "vod_actor",
+                "summary": "vod_content",
+                "subtitle": "vod_remarks"
+              }
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "json",
+              "engine": "embeddedPlaylist",
+              "lineField": "vod_play_from",
+              "itemsField": "vod_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              }
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "搜av资源",
+      "baseUrl": "https://api.souavzyw.net",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "list": "$.list[*]",
+              "fields": {
+                "id": "vod_id",
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "subtitle": "vod_remarks",
+                "category": "type_name"
+              }
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "item": "$.list[0]",
+              "fields": {
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "category": "type_name",
+                "year": "vod_year",
+                "area": "vod_area",
+                "director": "vod_director",
+                "actor": "vod_actor",
+                "summary": "vod_content",
+                "subtitle": "vod_remarks"
+              }
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "json",
+              "engine": "embeddedPlaylist",
+              "lineField": "vod_play_from",
+              "itemsField": "vod_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              }
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "jkun资源",
+      "baseUrl": "https://jkunzyapi.com",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "list": "$.list[*]",
+              "fields": {
+                "id": "vod_id",
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "subtitle": "vod_remarks",
+                "category": "type_name"
+              }
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "item": "$.list[0]",
+              "fields": {
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "category": "type_name",
+                "year": "vod_year",
+                "area": "vod_area",
+                "director": "vod_director",
+                "actor": "vod_actor",
+                "summary": "vod_content",
+                "subtitle": "vod_remarks"
+              }
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "json",
+              "engine": "embeddedPlaylist",
+              "lineField": "vod_play_from",
+              "itemsField": "vod_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              }
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "滴滴资源网",
+      "baseUrl": "https://api.ddapi.cc",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "list": "$.list[*]",
+              "fields": {
+                "id": "vod_id",
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "subtitle": "vod_remarks",
+                "category": "type_name"
+              }
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "item": "$.list[0]",
+              "fields": {
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "category": "type_name",
+                "year": "vod_year",
+                "area": "vod_area",
+                "director": "vod_director",
+                "actor": "vod_actor",
+                "summary": "vod_content",
+                "subtitle": "vod_remarks"
+              }
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "json",
+              "engine": "embeddedPlaylist",
+              "lineField": "vod_play_from",
+              "itemsField": "vod_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              }
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "豆豆资源",
+      "baseUrl": "https://api.douapi.cc",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "list": "$.list[*]",
+              "fields": {
+                "id": "vod_id",
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "subtitle": "vod_remarks",
+                "category": "type_name"
+              }
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "item": "$.list[0]",
+              "fields": {
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "category": "type_name",
+                "year": "vod_year",
+                "area": "vod_area",
+                "director": "vod_director",
+                "actor": "vod_actor",
+                "summary": "vod_content",
+                "subtitle": "vod_remarks"
+              }
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "json",
+              "engine": "embeddedPlaylist",
+              "lineField": "vod_play_from",
+              "itemsField": "vod_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              }
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "精品资源",
+      "baseUrl": "https://www.jingpinx.com",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "list": "$.list[*]",
+              "fields": {
+                "id": "vod_id",
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "subtitle": "vod_remarks",
+                "category": "type_name"
+              }
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "item": "$.list[0]",
+              "fields": {
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "category": "type_name",
+                "year": "vod_year",
+                "area": "vod_area",
+                "director": "vod_director",
+                "actor": "vod_actor",
+                "summary": "vod_content",
+                "subtitle": "vod_remarks"
+              }
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "json",
+              "engine": "embeddedPlaylist",
+              "lineField": "vod_play_from",
+              "itemsField": "vod_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              }
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "鲨鱼资源网",
+      "baseUrl": "https://shayuapi.com",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/at/xml/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "xml",
+              "engine": "jsonpath",
+              "list": "$.list.video[*]",
+              "fields": {
+                "id": "id",
+                "title": "name",
+                "cover": "pic",
+                "subtitle": "note",
+                "category": "type"
+              },
+              "xmlMode": "toObject"
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/at/xml/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "xml",
+              "engine": "jsonpath",
+              "item": "$.list.video[0]||$.list.video",
+              "fields": {
+                "title": "name",
+                "cover": "pic",
+                "category": "type",
+                "year": "year",
+                "area": "area",
+                "director": "director",
+                "actor": "actor",
+                "summary": "des",
+                "subtitle": "note"
+              },
+              "xmlMode": "toObject"
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "xml",
+              "engine": "embeddedPlaylist",
+              "lineField": "_play_from",
+              "itemsField": "_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              },
+              "xmlMode": "toObject"
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "森林资源",
+      "baseUrl": "https://slapibf.com",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "list": "$.list[*]",
+              "fields": {
+                "id": "vod_id",
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "subtitle": "vod_remarks",
+                "category": "type_name"
+              }
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "item": "$.list[0]",
+              "fields": {
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "category": "type_name",
+                "year": "vod_year",
+                "area": "vod_area",
+                "director": "vod_director",
+                "actor": "vod_actor",
+                "summary": "vod_content",
+                "subtitle": "vod_remarks"
+              }
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "json",
+              "engine": "embeddedPlaylist",
+              "lineField": "vod_play_from",
+              "itemsField": "vod_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              }
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "155资源",
+      "baseUrl": "https://155api.com",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/at/xml",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "xml",
+              "engine": "jsonpath",
+              "list": "$.list.video[*]",
+              "fields": {
+                "id": "id",
+                "title": "name",
+                "cover": "pic",
+                "subtitle": "note",
+                "category": "type"
+              },
+              "xmlMode": "toObject"
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/at/xml",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "xml",
+              "engine": "jsonpath",
+              "item": "$.list.video[0]||$.list.video",
+              "fields": {
+                "title": "name",
+                "cover": "pic",
+                "category": "type",
+                "year": "year",
+                "area": "area",
+                "director": "director",
+                "actor": "actor",
+                "summary": "des",
+                "subtitle": "note"
+              },
+              "xmlMode": "toObject"
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "xml",
+              "engine": "embeddedPlaylist",
+              "lineField": "_play_from",
+              "itemsField": "_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              },
+              "xmlMode": "toObject"
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "色猫资源",
+      "baseUrl": "https://caiji.semaozy.net",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/inc/apijson_vod.php",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "list": "$.list[*]",
+              "fields": {
+                "id": "vod_id",
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "subtitle": "vod_remarks",
+                "category": "type_name"
+              }
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/inc/apijson_vod.php",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "item": "$.list[0]",
+              "fields": {
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "category": "type_name",
+                "year": "vod_year",
+                "area": "vod_area",
+                "director": "vod_director",
+                "actor": "vod_actor",
+                "summary": "vod_content",
+                "subtitle": "vod_remarks"
+              }
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "json",
+              "engine": "embeddedPlaylist",
+              "lineField": "vod_play_from",
+              "itemsField": "vod_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              }
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "乐博资源",
+      "baseUrl": "https://lbapi9.com",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/at/xml/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "xml",
+              "engine": "jsonpath",
+              "list": "$.list.video[*]",
+              "fields": {
+                "id": "id",
+                "title": "name",
+                "cover": "pic",
+                "subtitle": "note",
+                "category": "type"
+              },
+              "xmlMode": "toObject"
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/at/xml/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "xml",
+              "engine": "jsonpath",
+              "item": "$.list.video[0]||$.list.video",
+              "fields": {
+                "title": "name",
+                "cover": "pic",
+                "category": "type",
+                "year": "year",
+                "area": "area",
+                "director": "director",
+                "actor": "actor",
+                "summary": "des",
+                "subtitle": "note"
+              },
+              "xmlMode": "toObject"
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "xml",
+              "engine": "embeddedPlaylist",
+              "lineField": "_play_from",
+              "itemsField": "_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              },
+              "xmlMode": "toObject"
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "玉兔资源",
+      "baseUrl": "https://apiyutu.com",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/at/xml",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "xml",
+              "engine": "jsonpath",
+              "list": "$.list.video[*]",
+              "fields": {
+                "id": "id",
+                "title": "name",
+                "cover": "pic",
+                "subtitle": "note",
+                "category": "type"
+              },
+              "xmlMode": "toObject"
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/at/xml",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "xml",
+              "engine": "jsonpath",
+              "item": "$.list.video[0]||$.list.video",
+              "fields": {
+                "title": "name",
+                "cover": "pic",
+                "category": "type",
+                "year": "year",
+                "area": "area",
+                "director": "director",
+                "actor": "actor",
+                "summary": "des",
+                "subtitle": "note"
+              },
+              "xmlMode": "toObject"
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "xml",
+              "engine": "embeddedPlaylist",
+              "lineField": "_play_from",
+              "itemsField": "_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              },
+              "xmlMode": "toObject"
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "老色p资源",
+      "baseUrl": "https://apilsbzy1.com",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/at/xml",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "xml",
+              "engine": "jsonpath",
+              "list": "$.list.video[*]",
+              "fields": {
+                "id": "id",
+                "title": "name",
+                "cover": "pic",
+                "subtitle": "note",
+                "category": "type"
+              },
+              "xmlMode": "toObject"
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/at/xml",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "xml",
+              "engine": "jsonpath",
+              "item": "$.list.video[0]||$.list.video",
+              "fields": {
+                "title": "name",
+                "cover": "pic",
+                "category": "type",
+                "year": "year",
+                "area": "area",
+                "director": "director",
+                "actor": "actor",
+                "summary": "des",
+                "subtitle": "note"
+              },
+              "xmlMode": "toObject"
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "xml",
+              "engine": "embeddedPlaylist",
+              "lineField": "_play_from",
+              "itemsField": "_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              },
+              "xmlMode": "toObject"
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "番号资源",
+      "baseUrl": "http://fhapi9.com",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/at/json/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "list": "$.list[*]",
+              "fields": {
+                "id": "vod_id",
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "subtitle": "vod_remarks",
+                "category": "type_name"
+              }
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/at/json/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "item": "$.list[0]",
+              "fields": {
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "category": "type_name",
+                "year": "vod_year",
+                "area": "vod_area",
+                "director": "vod_director",
+                "actor": "vod_actor",
+                "summary": "vod_content",
+                "subtitle": "vod_remarks"
+              }
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "json",
+              "engine": "embeddedPlaylist",
+              "lineField": "vod_play_from",
+              "itemsField": "vod_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              }
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "森林资源",
+      "baseUrl": "http://slapibf.com",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "list": "$.list[*]",
+              "fields": {
+                "id": "vod_id",
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "subtitle": "vod_remarks",
+                "category": "type_name"
+              }
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "item": "$.list[0]",
+              "fields": {
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "category": "type_name",
+                "year": "vod_year",
+                "area": "vod_area",
+                "director": "vod_director",
+                "actor": "vod_actor",
+                "summary": "vod_content",
+                "subtitle": "vod_remarks"
+              }
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "json",
+              "engine": "embeddedPlaylist",
+              "lineField": "vod_play_from",
+              "itemsField": "vod_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              }
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "辣椒资源",
+      "baseUrl": "https://apilj.com",
+      "request": {
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "wd": "{{keyword}}",
+                "pg": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "list": "$.list[*]",
+              "fields": {
+                "id": "vod_id",
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "subtitle": "vod_remarks",
+                "category": "type_name"
+              }
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "/api.php/provide/vod/",
+              "method": "GET",
+              "query": {
+                "ac": "detail",
+                "ids": "{{ui.search.list.id}}"
+              }
+            },
+            "response": {
+              "format": "json",
+              "engine": "jsonpath",
+              "item": "$.list[0]",
+              "fields": {
+                "title": "vod_name",
+                "cover": "vod_pic",
+                "category": "type_name",
+                "year": "vod_year",
+                "area": "vod_area",
+                "director": "vod_director",
+                "actor": "vod_actor",
+                "summary": "vod_content",
+                "subtitle": "vod_remarks"
+              }
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "json",
+              "engine": "embeddedPlaylist",
+              "lineField": "vod_play_from",
+              "itemsField": "vod_play_url",
+              "lineSplit": "$$$",
+              "itemSplit": "#",
+              "pairRegex": "([^$#]+)\\$([^$#]+)",
+              "fields": {
+                "title": "itemName",
+                "url": "itemUrl"
+              }
+            }
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "response": {
+              "format": "text"
+            },
+            "output": {
+              "kind": "media",
+              "field": "{{ui.detail.episodes.url}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "xHamster",
+      "baseUrl": "https://xhamster.com",
+      "request": {
+        "method": "GET",
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Mobile Safari/537.36",
+          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "Accept-Language": "en-US,en;q=0.9"
+        },
+        "charset": "UTF-8",
+        "timeoutMs": 20000
+      },
+      "pages": {
+        "ui.search": {
+          "list": {
+            "vars": {
+              "keyword": {
+                "fromInput": "keyword"
+              },
+              "page": {
+                "init": 1
+              }
+            },
+            "request": {
+              "url": "/search/{{keyword}}",
+              "method": "GET",
+              "query": {
+                "page": "{{page}}"
+              }
+            },
+            "response": {
+              "format": "html",
+              "engine": "css",
+              "list": "article:has(a[href*='/videos/']), div[data-video-id], div[data-role*='video']:has(a[href*='/videos/']), a[href*='/videos/']",
+              "fields": {
+                "title": "a[href*='/videos/']@title||a[href*='/videos/']@aria-label||img@alt||@title||@aria-label||@text",
+                "detailUrl": {
+                  "rule": "a[href*='/videos/']@href||@href",
+                  "asUrl": true
+                },
+                "cover": {
+                  "rule": "img@data-src||img@data-r-src||img@data-preview||img@src",
+                  "asUrl": true
+                },
+                "subtitle": ".duration@text||[class*='duration']@text||[data-role*='duration']@text",
+                "summary": ".video-description@text||[class*='description']@text"
+              }
+            },
+            "update": {
+              "page": {
+                "add": [
+                  "page",
+                  1
+                ]
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.detail": {
+          "info": {
+            "request": {
+              "url": "{{ui.search.list.detailUrl}}",
+              "method": "GET"
+            },
+            "response": {
+              "format": "html",
+              "engine": "css",
+              "item": "$",
+              "fields": {
+                "title": "h1@text||meta[property=og:title]@content||title@text",
+                "cover": {
+                  "rule": "meta[property=og:image]@content||video@poster||img@data-src||img@src",
+                  "asUrl": true
+                },
+                "summary": "meta[name=description]@content||meta[property=og:description]@content||[class*='description']@text",
+                "subtitle": "[class*='views']@text||[class*='duration']@text",
+                "playEntryUrl": {
+                  "rule": "link[rel=canonical]@href||meta[property=og:url]@content",
+                  "asUrl": true
+                },
+                "tags": {
+                  "list": "a[href*='/tags/'], a[href*='/categories/']",
+                  "fields": {
+                    "title": "@text",
+                    "url": {
+                      "rule": "@href",
+                      "asUrl": true
+                    },
+                    "keyword": "@text"
+                  }
+                }
+              }
+            }
+          },
+          "episodes": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "html",
+              "engine": "css",
+              "list": ".xh-unified-no-episode-list",
+              "fields": {
+                "title": "a@text",
+                "url": {
+                  "rule": "a@href",
+                  "asUrl": true
+                }
+              }
+            },
+            "fallbackItem": {
+              "title": "{{ui.detail.info.title}}",
+              "url": "{{ui.search.list.detailUrl}}",
+              "open": "ui.video.play"
+            },
+            "open": "ui.video.play"
+          },
+          "recommend": {
+            "request": {
+              "reuse": "info"
+            },
+            "response": {
+              "format": "html",
+              "engine": "css",
+              "list": "article:has(a[href*='/videos/']), div[data-video-id], div[data-role*='video']:has(a[href*='/videos/']), a[href*='/videos/']",
+              "fields": {
+                "title": "a[href*='/videos/']@title||a[href*='/videos/']@aria-label||img@alt||@title||@aria-label||@text",
+                "detailUrl": {
+                  "rule": "a[href*='/videos/']@href||@href",
+                  "asUrl": true
+                },
+                "cover": {
+                  "rule": "img@data-src||img@data-r-src||img@data-preview||img@src",
+                  "asUrl": true
+                }
+              }
+            },
+            "open": "ui.detail"
+          }
+        },
+        "ui.video.play": {
+          "content": {
+            "request": {
+              "url": "{{ui.detail.episodes.url}}",
+              "method": "GET",
+              "webView": {
+                "enabled": true,
+                "wait": {
+                  "until": "selector",
+                  "selector": "video, source, iframe, [data-role*='player'], [class*='player']",
+                  "timeoutMs": 20000
+                },
+                "trigger": {
+                  "type": "click",
+                  "selector": "video, button[aria-label*='Play'], button[class*='play'], [data-role*='play']",
+                  "delayMs": 1200,
+                  "maxRounds": 1
+                },
+                "extract": {
+                  "type": "media",
+                  "selector": "video, video source, source, iframe, a[href*='.m3u8'], a[href*='.mp4']",
+                  "multiple": true
+                }
+              }
+            },
+            "response": {
+              "format": "html",
+              "engine": "css",
+              "item": "$",
+              "fields": {
+                "candidateUrl": {
+                  "rule": "video@src||video source@src||source@src||iframe@src||a[href*='.m3u8']@href||a[href*='.mp4']@href",
+                  "asUrl": true
+                }
+              }
+            },
+            "output": {
+              "kind": "media",
+              "field": "candidateUrl",
+              "fallback": "{{ui.detail.episodes.url}}",
+              "sniff": {
+                "include": [
+                  ".m3u8",
+                  ".mp4",
+                  "master.m3u8",
+                  "hls"
+                ],
+                "exclude": [
+                  "google-analytics.com",
+                  "googletagmanager.com",
+                  "trafficstars.com",
+                  "tsyndicate.com",
+                  "collector.xhamster.com",
+                  "static-ah.xhcdn.com"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+
+]
