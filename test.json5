@@ -26,18 +26,18 @@
             engine: "css",
             list: "div.module-main.module-page > div.module-items.module-card-items > div.module-card-item.module-item",
             fields: {
-              title: "h1 a@text||h2 a@text||h3 a@text||h4 a@text||[class*=title] a@text||[class*=name] a@text||a[class*=title]@text||a[class*=name]@text||h1 a@title||h2 a@title||h3 a@title||h4 a@title||[class*=title] a@title||[class*=name] a@title||a[href*=voddetail]@title||a[href*=detail]@title||a[href*=video]@title||a[href*=movie]@title||a[href*=show]@title||img@alt",
+              title: "a@text",
               detailUrl: {
-                rule: "h1 a@href||h2 a@href||h3 a@href||h4 a@href||[class*=title] a@href||[class*=name] a@href||a[class*=title]@href||a[class*=name]@href||a[href*=voddetail]@href||a[href*=detail]@href||a[href*=video]@href||a[href*=movie]@href||a[href*=show]@href",
+                rule: "a[href]@href",
                 asUrl: true,
               },
               cover: {
-                rule: "a.v-thumb@data-original||a.v-thumb@data-src||a.v-thumb@data-lazy-src||a.v-thumb@data-url||a.v-thumb@data-img||a.v-thumb@data-poster||img@data-original||img@data-src||img@data-lazy-src||img@data-url||img@data-img||img@data-poster||img@poster||img@src||[data-original]@data-original||[data-src]@data-src||[data-lazy-src]@data-lazy-src||[data-url]@data-url||[data-img]@data-img||[data-poster]@data-poster||[poster]@poster",
+                rule: "img@src",
                 asUrl: true,
               },
-              summary: ".pic-text@text||.text-muted@text||p@text",
+              summary: "@text",
               playUrl: {
-                rule: "a[href*=vodplay]@href||a[href*=play]@href||a[href*=player]@href||a[href*=watch]@href||a.btn-important@href||a.btn-base@href",
+                rule: "a[href*=play]@href",
                 asUrl: true,
               },
             },
@@ -64,14 +64,14 @@
             engine: "css",
             item: "$",
             fields: {
-              title: "h1@text||.title@text",
+              title: "h1@text",
               cover: {
-                rule: "a.v-thumb@data-original||a.v-thumb@data-src||a.v-thumb@data-lazy-src||a.v-thumb@data-url||a.v-thumb@data-img||a.v-thumb@data-poster||img@data-original||img@data-src||img@data-lazy-src||img@data-url||img@data-img||img@data-poster||img@poster||img@src||[data-original]@data-original||[data-src]@data-src||[data-lazy-src]@data-lazy-src||[data-url]@data-url||[data-img]@data-img||[data-poster]@data-poster||[poster]@poster",
+                rule: "img@src",
                 asUrl: true,
               },
-              summary: ".content@text||.vod-content@text||.detail-content@text",
+              summary: "@text",
               playUrl: {
-                rule: "a[href*=vodplay]@href||a[href*=play]@href||a[href*=player]@href||a[href*=watch]@href||a.btn-important@href||a.btn-base@href",
+                rule: "a[href*=play]@href",
                 asUrl: true,
               },
             },
@@ -86,7 +86,7 @@
             engine: "css",
             list: "strong > div.main > div.content a[href*=vodplay], a[href*=play], a[href*=player], a[href*=watch], a[href*=episode], a[href*=ep-], a[href*=stream], [data-url*=vodplay], [data-url*=play], [data-url*=player], [data-url*=watch], [data-url*=episode], [data-url*=stream], [data-href*=vodplay], [data-href*=play], [data-href*=player], [data-href*=watch], [data-href*=episode], [data-href*=stream], [data-link*=vodplay], [data-link*=play], [data-link*=player], [data-link*=watch], [data-link*=episode], [data-link*=stream], [data-src*=vodplay], [data-src*=play], [data-src*=player], [data-src*=watch], [data-play*=vodplay], [data-play*=play], [data-value*=play], [onclick*=vodplay], [onclick*=play], [onclick*=player], [onclick*=watch], [onclick*=episode], [onclick*=stream]",
             fields: {
-              title: "@text||@title||@aria-label",
+              title: "@text",
               url: {
                 first: [
                   {
@@ -173,7 +173,7 @@
                     asUrl: true,
                   },
                   {
-                    rule: "video@src||source@src",
+                    rule: "video@src",
                     asUrl: true,
                   },
                 ],
