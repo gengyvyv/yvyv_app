@@ -1,486 +1,154 @@
 // 来源：https://ailongmiao.com/movie/ 龙喵影视导航
 // 逐个验证可播放的视频站点配置 (WebView 模式)
 [
-  // ═══════════════════════════════════════════
-  // 1. 低端影视 (ddys.io) - WebView 全链路
-  // ═══════════════════════════════════════════
-  {
-    name: "低端影视",
-    baseUrl: "https://ddys.io",
-    request: {
-      method: "GET",
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Linux; Android 14; Pixel 9a) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8"
-      },
-      charset: "UTF-8",
-      timeoutMs: 20000
-    },
+    {
+    name: "omofun动漫视频网",
+    baseUrl: "https://omofun01.top",
     pages: {
       "ui.search": {
         list: {
           vars: {
-            keyword: { fromInput: "keyword" }
+            keyword: {
+              fromInput: "keyword",
+            },
+            page: {
+              init: 1,
+            },
           },
           request: {
-            url: "/search",
-            method: "POST",
-            bodyType: "form",
-            body: {
-              q: "{{keyword}}"
-            },
-            webView: {
-              enabled: true,
-              wait: {
-                until: "selector",
-                selector: ".movie-card, .search-result, a[href*='/movie/']",
-                timeoutMs: 20000
-              }
-            }
+            url: "/vod/search/page/{{page}}/wd/{{keyword}}.html",
+            method: "GET",
+            query: {},
+            timeoutMs: 15000,
           },
           response: {
             format: "html",
             engine: "css",
-            list: ".movie-card",
+            list: "div.module-main.module-page > div.module-items.module-card-items > div.module-card-item.module-item",
             fields: {
-              title: "h3 a@text",
+              title: "h1 a@text||h2 a@text||h3 a@text||h4 a@text||[class*=title] a@text||[class*=name] a@text||a[class*=title]@text||a[class*=name]@text||h1 a@title||h2 a@title||h3 a@title||h4 a@title||[class*=title] a@title||[class*=name] a@title||a[href*=voddetail]@title||a[href*=detail]@title||a[href*=video]@title||a[href*=movie]@title||a[href*=show]@title||img@alt",
               detailUrl: {
-                rule: "h3 a@href",
-                asUrl: true
+                rule: "h1 a@href||h2 a@href||h3 a@href||h4 a@href||[class*=title] a@href||[class*=name] a@href||a[class*=title]@href||a[class*=name]@href||a[href*=voddetail]@href||a[href*=detail]@href||a[href*=video]@href||a[href*=movie]@href||a[href*=show]@href",
+                asUrl: true,
               },
               cover: {
-                rule: "img@src",
-                asUrl: true
+                rule: "a.v-thumb@data-original||a.v-thumb@data-src||a.v-thumb@data-lazy-src||a.v-thumb@data-url||a.v-thumb@data-img||a.v-thumb@data-poster||img@data-original||img@data-src||img@data-lazy-src||img@data-url||img@data-img||img@data-poster||img@poster||img@src||[data-original]@data-original||[data-src]@data-src||[data-lazy-src]@data-lazy-src||[data-url]@data-url||[data-img]@data-img||[data-poster]@data-poster||[poster]@poster",
+                asUrl: true,
               },
-              subtitle: ".p-2 .text-gray-500@text||a[href^='/movie/'] + div p@text"
-            }
+              summary: ".pic-text@text||.text-muted@text||p@text",
+              playUrl: {
+                rule: "a[href*=vodplay]@href||a[href*=play]@href||a[href*=player]@href||a[href*=watch]@href||a.btn-important@href||a.btn-base@href",
+                asUrl: true,
+              },
+            },
           },
-          open: "ui.detail"
-        }
+          open: "ui.detail",
+        },
       },
       "ui.detail": {
         info: {
           request: {
             url: "{{ui.search.list.detailUrl}}",
+            method: "GET",
+            timeoutMs: 15000,
             webView: {
               enabled: true,
               wait: {
-                until: "selector",
-                selector: "h1, .movie-detail, [class*='detail']",
-                timeoutMs: 15000
-              }
-            }
-          },
-          response: {
-            format: "html",
-            engine: "css",
-            item: "$",
-            fields: {
-              title: "h1@text",
-              cover: {
-                rule: "img[src*='img.ddys.io']@src||meta[property='og:image']@content",
-                asUrl: true
+                until: "networkIdle",
+                timeoutMs: 12000,
               },
-              summary: "meta[name=description]@content||.text-gray-700 span:last-child@text",
-              subtitle: "h1 + div@text"
-            }
-          }
-        },
-        episodes: {
-          request: {
-            reuse: "info"
-          },
-          response: {
-            format: "html",
-            engine: "css",
-            list: "button[onclick*='switchSource']",
-            fields: {
-              title: "@text",
-              url: "@onclick"
-            }
-          },
-          fallbackItem: {
-            title: "{{ui.detail.info.title}}",
-            url: "{{ui.search.list.detailUrl}}",
-            open: "ui.video.play"
-          },
-          open: "ui.video.play"
-        }
-      },
-      "ui.video.play": {
-        content: {
-          request: {
-            url: "{{ui.detail.episodes.url}}",
-            webView: {
-              enabled: true,
-              wait: {
-                until: "selector",
-                selector: "video, source, iframe, #dplayer, .dplayer",
-                timeoutMs: 25000
-              },
-              trigger: {
-                type: "click",
-                selector: "#player-cover, .dplayer, button[onclick*='switchSource']",
-                delayMs: 3000,
-                maxRounds: 2
-              },
-              extract: {
-                type: "media",
-                selector: "video, video source, source, iframe[src*='m3u8'], iframe[src*='mp4']",
-                multiple: true
-              }
-            }
-          },
-          response: {
-            format: "html",
-            engine: "css",
-            item: "$",
-            fields: {
-              candidateUrl: {
-                rule: "video@src||video source@src||source@src||iframe@src",
-                asUrl: true
-              }
-            }
-          },
-          output: {
-            kind: "media",
-            field: "candidateUrl",
-            fallback: "{{ui.detail.episodes.url}}",
-            sniff: {
-              include: [
-                ".m3u8",
-                ".mp4",
-                "hls",
-                "bfvvs.com",
-                "fengbao8.com",
-                "jisuzyv.com",
-                "ddys.pro"
-              ],
-              exclude: [
-                "google-analytics.com",
-                "googletagmanager.com"
-              ]
-            }
-          }
-        }
-      }
-    }
-  },
-
-  // ═══════════════════════════════════════════
-  // 2. 看片狂人 (kpkuang.org) - MacCMS WebView
-  // ═══════════════════════════════════════════
-  {
-    name: "看片狂人",
-    baseUrl: "https://www.kpkuang.org",
-    request: {
-      method: "GET",
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Linux; Android 14; Pixel 9a) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "zh-CN,zh;q=0.9"
-      },
-      charset: "UTF-8",
-      timeoutMs: 20000
-    },
-    pages: {
-      "ui.search": {
-        list: {
-          vars: {
-            keyword: { fromInput: "keyword" },
-            page: { init: 1 }
-          },
-          request: {
-            url: "/vodsearch/-------------.html",
-            query: {
-              wd: "{{keyword}}",
-              page: "{{page}}"
             },
-            webView: {
-              enabled: true,
-              wait: {
-                until: "selector",
-                selector: ".fed-list-info, .fed-module-box, .fed-deta-content, a[href*='/voddetail/']",
-                timeoutMs: 25000
-              }
-            }
-          },
-          response: {
-            format: "html",
-            engine: "css",
-            list: ".fed-list-item, .fed-col-md2, a[href*='/voddetail/']",
-            fields: {
-              title: "a[href*='/voddetail/']@title||a@text",
-              detailUrl: {
-                rule: "a[href*='/voddetail/']@href||a@href",
-                asUrl: true
-              },
-              cover: {
-                rule: "a[href*='/voddetail/'] img@data-original||a img@data-src||a img@src||img@data-original||img@src",
-                asUrl: true
-              },
-              subtitle: ".fed-list-remarks@text||span.fed-text-muted@text"
-            }
-          },
-          update: {
-            page: { add: ["page", 1] }
-          },
-          open: "ui.detail"
-        }
-      },
-      "ui.detail": {
-        info: {
-          request: {
-            url: "{{ui.search.list.detailUrl}}",
-            webView: {
-              enabled: true,
-              wait: {
-                until: "selector",
-                selector: "h1, .fed-part-eins, .fed-deta-content",
-                timeoutMs: 15000
-              }
-            }
           },
           response: {
             format: "html",
             engine: "css",
             item: "$",
             fields: {
-              title: "h1@text||.fed-part-eins@text||meta[property=og:title]@content",
+              title: "h1@text||.title@text",
               cover: {
-                rule: ".fed-list-pic img@src||.fed-deta-pic img@src||img.fed-part-eke@src||meta[property=og:image]@content",
-                asUrl: true
+                rule: "a.v-thumb@data-original||a.v-thumb@data-src||a.v-thumb@data-lazy-src||a.v-thumb@data-url||a.v-thumb@data-img||a.v-thumb@data-poster||img@data-original||img@data-src||img@data-lazy-src||img@data-url||img@data-img||img@data-poster||img@poster||img@src||[data-original]@data-original||[data-src]@data-src||[data-lazy-src]@data-lazy-src||[data-url]@data-url||[data-img]@data-img||[data-poster]@data-poster||[poster]@poster",
+                asUrl: true,
               },
-              summary: ".fed-part-esx@text||.fed-deta-content p@text||meta[name=description]@content",
-              subtitle: ".fed-part-eone@text||.fed-list-remarks@text",
-              playEntryUrl: {
-                rule: "a[href*='/vodplay/']@href",
-                asUrl: true
-              }
-            }
-          }
+              summary: ".content@text||.vod-content@text||.detail-content@text",
+              playUrl: {
+                rule: "a[href*=vodplay]@href||a[href*=play]@href||a[href*=player]@href||a[href*=watch]@href||a.btn-important@href||a.btn-base@href",
+                asUrl: true,
+              },
+            },
+          },
         },
         episodes: {
           request: {
-            reuse: "info"
+            reuse: "info",
           },
           response: {
             format: "html",
             engine: "css",
-            list: "a[href*='/vodplay/']",
+            list: "strong > div.main > div.content a[href*=vodplay], a[href*=play], a[href*=player], a[href*=watch], a[href*=episode], a[href*=ep-], a[href*=stream], [data-url*=vodplay], [data-url*=play], [data-url*=player], [data-url*=watch], [data-url*=episode], [data-url*=stream], [data-href*=vodplay], [data-href*=play], [data-href*=player], [data-href*=watch], [data-href*=episode], [data-href*=stream], [data-link*=vodplay], [data-link*=play], [data-link*=player], [data-link*=watch], [data-link*=episode], [data-link*=stream], [data-src*=vodplay], [data-src*=play], [data-src*=player], [data-src*=watch], [data-play*=vodplay], [data-play*=play], [data-value*=play], [onclick*=vodplay], [onclick*=play], [onclick*=player], [onclick*=watch], [onclick*=episode], [onclick*=stream]",
             fields: {
-              title: "@text",
+              title: "@text||@title||@aria-label",
               url: {
-                rule: "@href",
-                asUrl: true
-              }
-            }
-          },
-          fallbackItem: {
-            title: "{{ui.detail.info.title}}",
-            url: "{{ui.detail.info.playEntryUrl}}",
-            open: "ui.video.play"
-          },
-          open: "ui.video.play"
-        }
-      },
-      "ui.video.play": {
-        content: {
-          request: {
-            url: "{{ui.detail.episodes.url}}",
-            webView: {
-              enabled: true,
-              wait: {
-                until: "selector",
-                selector: "video, source, iframe, #player, .dplayer, .macplayer",
-                timeoutMs: 25000
+                first: [
+                  {
+                    rule: "@href",
+                    asUrl: true,
+                  },
+                  {
+                    rule: "@data-url",
+                    asUrl: true,
+                  },
+                  {
+                    rule: "@data-href",
+                    asUrl: true,
+                  },
+                  {
+                    rule: "@data-link",
+                    asUrl: true,
+                  },
+                  {
+                    rule: "@data-src",
+                    asUrl: true,
+                  },
+                  {
+                    rule: "@data-play",
+                    asUrl: true,
+                  },
+                  {
+                    rule: "@data-value",
+                    asUrl: true,
+                  },
+                  {
+                    rule: "@value",
+                    asUrl: true,
+                  },
+                  {
+                    rule: "@onclick",
+                    regex: "['\\\"]([^'\\\"]*(?:vodplay|play|player|watch|episode|stream)[^'\\\"]*)['\\\"]",
+                    asUrl: true,
+                  },
+                ],
               },
-              trigger: {
-                type: "click",
-                selector: ".play-btn, button[aria-label*='Play'], #player, .macplayer",
-                delayMs: 3000,
-                maxRounds: 2
-              },
-              extract: {
-                type: "media",
-                selector: "video, video source, source, iframe",
-                multiple: true
-              }
-            }
-          },
-          response: {
-            format: "html",
-            engine: "css",
-            item: "$",
-            fields: {
-              candidateUrl: {
-                rule: "video@src||video source@src||source@src||iframe@src",
-                asUrl: true
-              }
-            }
-          },
-          output: {
-            kind: "media",
-            field: "candidateUrl",
-            fallback: "{{ui.detail.episodes.url}}",
-            sniff: {
-              include: [
-                ".m3u8",
-                ".mp4",
-                "hls"
-              ],
-              exclude: [
-                "google-analytics.com",
-                "googletagmanager.com"
-              ]
-            }
-          }
-        }
-      }
-    }
-  },
-
-  // ═══════════════════════════════════════════
-  // 3. 影猫の仓库 (ymck.pro) - MacCMS + Vue.js WebView
-  // ═══════════════════════════════════════════
-  {
-    name: "影猫の仓库",
-    baseUrl: "https://www.ymck.pro",
-    request: {
-      method: "GET",
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Linux; Android 14; Pixel 9a) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "zh-CN,zh;q=0.9"
-      },
-      charset: "UTF-8",
-      timeoutMs: 20000
-    },
-    pages: {
-      "ui.search": {
-        list: {
-          vars: {
-            keyword: { fromInput: "keyword" },
-            page: { init: 1 }
-          },
-          request: {
-            url: "/search.html",
-            query: {
-              wd: "{{keyword}}",
-              page: "{{page}}"
             },
-            webView: {
-              enabled: true,
-              wait: {
-                until: "selector",
-                selector: ".search-result-item, .search-result-list, .module-card-item, a[href*='/movie/'], a[href*='/vodplay/']",
-                timeoutMs: 25000
-              }
-            }
-          },
-          response: {
-            format: "html",
-            engine: "css",
-            list: ".search-result-item, .module-card-item, .fed-list-item, a[href*='/movie/']",
-            fields: {
-              title: "a@title||a@text||.title@text",
-              detailUrl: {
-                rule: "a@href",
-                asUrl: true
-              },
-              cover: {
-                rule: "img@data-src||img@data-original||img@src",
-                asUrl: true
-              },
-              subtitle: ".website-name@text||.module-item-note@text||.fed-list-remarks@text"
-            }
-          },
-          update: {
-            page: { add: ["page", 1] }
-          },
-          open: "ui.detail"
-        }
-      },
-      "ui.detail": {
-        info: {
-          request: {
-            url: "{{ui.search.list.detailUrl}}",
-            webView: {
-              enabled: true,
-              wait: {
-                until: "selector",
-                selector: "h1, h2, .details, .fed-part-eins",
-                timeoutMs: 15000
-              }
-            }
-          },
-          response: {
-            format: "html",
-            engine: "css",
-            item: "$",
-            fields: {
-              title: "h1@text||h2@text||h3@text||meta[property=og:title]@content",
-              cover: {
-                rule: ".details img@src||.fed-list-pic img@src||img@data-src||img@data-original||meta[property=og:image]@content",
-                asUrl: true
-              },
-              summary: ".movie-introduction@text||.fed-part-esx@text||meta[name=description]@content",
-              subtitle: ".details .text-muted@text||.fed-list-remarks@text",
-              playEntryUrl: {
-                rule: "a[href*='/movie/'][class*='play']@href||a[href*='play']@href||a[href*='/vodplay/']@href",
-                asUrl: true
-              }
-            }
-          }
-        },
-        episodes: {
-          request: {
-            reuse: "info"
-          },
-          response: {
-            format: "html",
-            engine: "css",
-            list: "a[href*='/movie/'][class*='play'], a[href*='play'], .play-list a, .module-episode-item a, a[href*='/vodplay/']",
-            fields: {
-              title: "@text",
-              url: {
-                rule: "@href",
-                asUrl: true
-              }
-            }
           },
           fallbackItem: {
-            title: "{{ui.detail.info.title}}",
-            url: "{{ui.detail.info.playEntryUrl}}",
-            open: "ui.video.play"
+            title: "正片",
+            url: "{{ui.detail.info.playUrl}}",
           },
-          open: "ui.video.play"
-        }
+        },
       },
       "ui.video.play": {
         content: {
           request: {
             url: "{{ui.detail.episodes.url}}",
+            method: "GET",
+            timeoutMs: 15000,
             webView: {
               enabled: true,
               wait: {
-                until: "selector",
-                selector: "video, source, iframe, #dplayer, .dplayer, .player, .macplayer",
-                timeoutMs: 25000
+                until: "networkIdle",
+                timeoutMs: 12000,
               },
-              trigger: {
-                type: "click",
-                selector: ".play-btn, button[aria-label*='Play'], #player-cover, .macplayer",
-                delayMs: 3000,
-                maxRounds: 2
-              },
-              extract: {
-                type: "media",
-                selector: "video, video source, source, iframe",
-                multiple: true
-              }
-            }
+            },
           },
           response: {
             format: "html",
@@ -488,29 +156,62 @@
             item: "$",
             fields: {
               candidateUrl: {
-                rule: "video@src||video source@src||source@src||iframe@src",
-                asUrl: true
-              }
-            }
+                first: [
+                  {
+                    rule: "@html",
+                    regex: "https?://[^\\s\"'<>]+?\\.(?:m3u8|mp4)(?:\\?[^\\s\"'<>]*)?",
+                    asUrl: true,
+                  },
+                  {
+                    rule: "@html",
+                    regex: "https?:\\\\\\/\\\\\\/[^\"'<>]+?\\.(?:m3u8|mp4)(?:\\?[^\"'<>]*)?",
+                    asUrl: true,
+                  },
+                  {
+                    rule: "@html",
+                    regex: "url\\s*[:=]\\s*['\\\"]([^'\\\"]+\\.(?:m3u8|mp4)(?:\\?[^'\\\"]*)?)['\\\"]",
+                    asUrl: true,
+                  },
+                  {
+                    rule: "video@src||source@src",
+                    asUrl: true,
+                  },
+                ],
+              },
+            },
           },
           output: {
             kind: "media",
             field: "candidateUrl",
-            fallback: "{{ui.detail.episodes.url}}",
             sniff: {
               include: [
                 ".m3u8",
                 ".mp4",
-                "hls"
               ],
               exclude: [
-                "google-analytics.com",
-                "googletagmanager.com"
-              ]
-            }
-          }
-        }
-      }
-    }
-  }
+                "ads",
+                ".jpg",
+                ".jpeg",
+                ".png",
+                ".gif",
+                ".webp",
+                ".avif",
+                ".svg",
+                ".bmp",
+                ".ico",
+                ".apng",
+                ".heic",
+                ".heif",
+                ".tif",
+                ".tiff",
+                "image/",
+                "format=webp",
+                "format=avif",
+              ],
+            },
+          },
+        },
+      },
+    },
+  },
 ]
