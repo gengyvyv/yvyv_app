@@ -84,49 +84,12 @@
           response: {
             format: "html",
             engine: "css",
-            list: "strong > div.main > div.content a[href*=vodplay], a[href*=play], a[href*=player], a[href*=watch], a[href*=episode], a[href*=ep-], a[href*=stream], [data-url*=vodplay], [data-url*=play], [data-url*=player], [data-url*=watch], [data-url*=episode], [data-url*=stream], [data-href*=vodplay], [data-href*=play], [data-href*=player], [data-href*=watch], [data-href*=episode], [data-href*=stream], [data-link*=vodplay], [data-link*=play], [data-link*=player], [data-link*=watch], [data-link*=episode], [data-link*=stream], [data-src*=vodplay], [data-src*=play], [data-src*=player], [data-src*=watch], [data-play*=vodplay], [data-play*=play], [data-value*=play], [onclick*=vodplay], [onclick*=play], [onclick*=player], [onclick*=watch], [onclick*=episode], [onclick*=stream]",
+            list: "a[href]",
             fields: {
               title: "@text",
               url: {
-                first: [
-                  {
-                    rule: "@href",
-                    asUrl: true,
-                  },
-                  {
-                    rule: "@data-url",
-                    asUrl: true,
-                  },
-                  {
-                    rule: "@data-href",
-                    asUrl: true,
-                  },
-                  {
-                    rule: "@data-link",
-                    asUrl: true,
-                  },
-                  {
-                    rule: "@data-src",
-                    asUrl: true,
-                  },
-                  {
-                    rule: "@data-play",
-                    asUrl: true,
-                  },
-                  {
-                    rule: "@data-value",
-                    asUrl: true,
-                  },
-                  {
-                    rule: "@value",
-                    asUrl: true,
-                  },
-                  {
-                    rule: "@onclick",
-                    regex: "['\\\"]([^'\\\"]*(?:vodplay|play|player|watch|episode|stream)[^'\\\"]*)['\\\"]",
-                    asUrl: true,
-                  },
-                ],
+                rule: "@href",
+                asUrl: true,
               },
             },
           },
@@ -156,27 +119,9 @@
             item: "$",
             fields: {
               candidateUrl: {
-                first: [
-                  {
-                    rule: "@html",
-                    regex: "https?://[^\\s\"'<>]+?\\.(?:m3u8|mp4)(?:\\?[^\\s\"'<>]*)?",
-                    asUrl: true,
-                  },
-                  {
-                    rule: "@html",
-                    regex: "https?:\\\\\\/\\\\\\/[^\"'<>]+?\\.(?:m3u8|mp4)(?:\\?[^\"'<>]*)?",
-                    asUrl: true,
-                  },
-                  {
-                    rule: "@html",
-                    regex: "url\\s*[:=]\\s*['\\\"]([^'\\\"]+\\.(?:m3u8|mp4)(?:\\?[^'\\\"]*)?)['\\\"]",
-                    asUrl: true,
-                  },
-                  {
-                    rule: "video@src",
-                    asUrl: true,
-                  },
-                ],
+                rule: "@html",
+                regex: "https?://[^\\s\"'<>]+?\\.(?:m3u8|mp4)(?:\\?[^\\s\"'<>]*)?",
+                asUrl: true,
               },
             },
           },
@@ -187,26 +132,6 @@
               include: [
                 ".m3u8",
                 ".mp4",
-              ],
-              exclude: [
-                "ads",
-                ".jpg",
-                ".jpeg",
-                ".png",
-                ".gif",
-                ".webp",
-                ".avif",
-                ".svg",
-                ".bmp",
-                ".ico",
-                ".apng",
-                ".heic",
-                ".heif",
-                ".tif",
-                ".tiff",
-                "image/",
-                "format=webp",
-                "format=avif",
               ],
             },
           },
