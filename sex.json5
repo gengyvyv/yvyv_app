@@ -3313,5 +3313,104 @@
         }
       }
     },
+      {
+    name: "xmjk",
+    baseUrl: "https://s18.hdbjzs.com",
+    pages: {
+      "ui.search": {
+        list: {
+          vars: {
+            keyword: {
+              fromInput: "keyword",
+            },
+            page: {
+              init: 1,
+            },
+          },
+          request: {
+            url: "https://xmjk.kphm88.com/forward",
+            method: "POST",
+            headers: {
+              "Accept": "application/json, text/plain, */*",
+              "Content-Type": "application/json",
+              "User-Agent": "Mozilla/5.0",
+            },
+            bodyType: "json",
+            charset: "UTF-8",
+            timeoutMs: 15000,
+            body: {
+              command: "WEB_GET_INFO",
+              pageNumber: "{{page}}",
+              RecordsPage: "20",
+              typeId: "0",
+              typeMid: "1",
+              languageType: "CN",
+              content: "{{keyword}}",
+              type: "1",
+            },
+          },
+          response: {
+            format: "json",
+            engine: "jsonpath",
+            list: "$.data.resultList[*]",
+            fields: {
+              id: "id",
+              url: "id",
+              typeMid: "type_Mid||typeMid",
+              title: "vod_name",
+              cover: {
+                rule: "vod_pic",
+                asUrl: true,
+              },
+              subtitle: "typeName||vod_class||vod_time_add",
+            },
+          },
+          update: {
+            page: {
+              add: ["page", 1],
+            },
+          },
+          open: "ui.video.play",
+        },
+      },
+      "ui.video.play": {
+        content: {
+          request: {
+            url: "https://xmjk.kphm88.com/forward",
+            method: "POST",
+            headers: {
+              "Accept": "application/json, text/plain, */*",
+              "Content-Type": "application/json",
+              "User-Agent": "Mozilla/5.0",
+            },
+            bodyType: "json",
+            charset: "UTF-8",
+            timeoutMs: 15000,
+            body: {
+              command: "WEB_GET_INFO_DETAIL",
+              type_Mid: "1",
+              id: "{{input.url}}",
+              languageType: "CN",
+            },
+          },
+          response: {
+            format: "json",
+            engine: "jsonpath",
+            item: "$.data.result",
+            fields: {
+              candidateUrl: {
+                rule: "vod_url",
+                asUrl: true,
+              },
+            },
+          },
+          output: {
+            kind: "media",
+            field: "candidateUrl",
+          },
+        },
+      },
+    },
+  },
 
 ]
